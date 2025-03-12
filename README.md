@@ -25,33 +25,36 @@ MovieMate je sistem za sledenje ogledanim filmom in ocenjevanje filmov na podlag
 
 Sistem sledi mikrostoritveni arhitekturi in vključuje naslednje ključne storitve:
 
-1. **Uporabniška storitev (/uporabniki)**
+1. **Uporabniška storitev (`/uporabniki`)** - uporablja **REST API** in SQLite bazo.
    - Upravljanje uporabniških računov (registracija, prijava, avtentikacija).
    - Hranjenje uporabniških podatkov (ime, e-pošta, zgodovina ogledov).
 
-2. **Storitvena baza filmov (/filmi)**
+2. **Storitvena baza filmov (`/filmi`)** - uporablja **gRPC** in SQLite bazo.
    - Vsebuje podatke o filmih (naslov, leto, žanr, opis, igralci).
    - Možna integracija z zunanjimi API-ji, kot je TMDB.
 
-3. **Storitvena enota ocen (/ocene)**
+3. **Storitvena enota ocen (`/ocene`)** - uporablja **sporočilnega posrednika** in SQLite bazo.
    - Omogoča uporabnikom dodajanje ocen in komentarjev k filmom.
    - Shranjuje in analizira uporabniške ocene.
 
-4. **Uporabniški vmesnik (/uporabniski-vmesnik)**
+4. **Uporabniški vmesnik (`/uporabniski-vmesnik`)** - uporablja spletno tehnologijo za prikaz podatkov.
    - Spletna aplikacija, kjer uporabniki dostopajo do sistema.
    - Omogoča dodajanje filmov, ocenjevanje in pregled ocen drugih uporabnikov.
 
 ## 🔗 Komunikacija med storitvami
 
-- Uporabniki komunicirajo s sistemom prek spletne aplikacije.
-- Storitev uporabnikov upravlja prijave in uporabniške podatke.
-- Storitev filmov nudi informacije o filmih in omogoča iskanje.
-- Storitev ocen omogoča shranjevanje in prikaz uporabniških ocen.
-- Vse storitve komunicirajo prek REST API-jev.
+- **Uporabniki** komunicirajo s sistemom prek spletne aplikacije.
+- **Storitev uporabnikov** upravlja prijave in uporabniške podatke prek **REST API**.
+- **Storitev filmov** nudi informacije o filmih in omogoča iskanje prek **gRPC**.
+- **Storitev ocen** omogoča shranjevanje in prikaz uporabniških ocen prek **sporočilnega posrednika**.
+- Vse storitve uporabljajo **SQLite** za shranjevanje podatkov.
 
-## 📌 Povzetek
 
-MovieMate je zasnovan kot modularen, razširljiv sistem, ki omogoča enostavno dodajanje novih funkcionalnosti v prihodnosti. Sledenje načelom čiste arhitekture zagotavlja neodvisnost posameznih komponent in jasno ločitev poslovne logike od implementacije.
+📂 **Dodatna dokumentacija:**
+- [Uporabniška storitev](Uporabniki/README.md)
+- [Storitvena baza filmov](Filmi/README.md)
+- [Storitvena enota ocen](Ocene/README.md)
+- [Uporabniški vmesnik](UporabniskiVmesnik/README.md)
 
 
 ![MovieMate](MovieMate.png)
