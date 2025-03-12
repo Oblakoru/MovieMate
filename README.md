@@ -51,9 +51,9 @@ Sistem sledi mikrostoritveni arhitekturi in vključuje naslednje ključne storit
 
 
 📂 **Dodatna dokumentacija:**
-- [Uporabniška storitev](Uporabniki/README.md)
-- [Storitvena baza filmov](Filmi/README.md)
-- [Storitvena enota ocen](Ocene/README.md)
+- [Uporabniška storitev](UporabnikiService/README.md)
+- [Storitvena baza filmov](FilmiService/README.md)
+- [Storitvena enota ocen](OceneService/README.md)
 - [Uporabniški vmesnik](UporabniskiVmesnik/README.md)
 
 
