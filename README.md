@@ -52,3 +52,6 @@ Sistem sledi mikrostoritveni arhitekturi in vključuje naslednje ključne storit
 ## 📌 Povzetek
 
 MovieMate je zasnovan kot modularen, razširljiv sistem, ki omogoča enostavno dodajanje novih funkcionalnosti v prihodnosti. Sledenje načelom čiste arhitekture zagotavlja neodvisnost posameznih komponent in jasno ločitev poslovne logike od implementacije.
+
+
+![MovieMate](MovieMate.png)
