@@ -4,11 +4,11 @@
 Spletna aplikacija omogoča uporabnikom interakcijo s sistemom.
 
 ## 🔗 Tehnologije
-- **Vrsta:** Frontend aplikacija (SPA)
+- **Vrsta:** Frontend aplikacija z uporabo React knjižnice
 - **Odgovornosti:**
   - Prikaz filmov in ocen
   - Upravljanje uporabniških profilov
-  - Interakcija z ostalimi storitvami prek REST/gRPC
+  - Interakcija z ostalimi storitvami preko REST/gRPC
 
 ## 📂 Funkcionalnosti
 - Pregled filmov in ocen

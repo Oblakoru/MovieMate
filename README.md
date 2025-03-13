@@ -2,7 +2,7 @@
 
 ## 📌 Opis projekta
 
-MovieMate je sistem za sledenje ogledanim filmom in ocenjevanje filmov na podlagi uporabniških mnenj. Omogoča uporabnikom, da vodijo evidenco filmov, ki so jih že pogledali, ocenjujejo filme in prebirajo ocene drugih uporabnikov.
+MovieMate je sistem za sledenje in ocenjevanje ogledanih filmov. Omogoča uporabnikom, da vodijo evidenco filmov, ki so jih že pogledali, ocenjujejo filme in prebirajo ocene drugih uporabnikov.
 
 ## 🎯 Poslovni problem
 
@@ -25,19 +25,19 @@ MovieMate je sistem za sledenje ogledanim filmom in ocenjevanje filmov na podlag
 
 Sistem sledi mikrostoritveni arhitekturi in vključuje naslednje ključne storitve:
 
-1. **Uporabniška storitev (`/uporabniki`)** - uporablja **REST API** in SQLite bazo.
+1. **Uporabniki service (`/uporabniki`)** - uporablja **REST API** in SQLite bazo.
    - Upravljanje uporabniških računov (registracija, prijava, avtentikacija).
    - Hranjenje uporabniških podatkov (ime, e-pošta, zgodovina ogledov).
 
-2. **Storitvena baza filmov (`/filmi`)** - uporablja **gRPC** in SQLite bazo.
+2. **Filmi service (`/filmi`)** - uporablja **gRPC** in SQLite bazo.
    - Vsebuje podatke o filmih (naslov, leto, žanr, opis, igralci).
    - Možna integracija z zunanjimi API-ji, kot je TMDB.
 
-3. **Storitvena enota ocen (`/ocene`)** - uporablja **sporočilnega posrednika** in SQLite bazo.
-   - Omogoča uporabnikom dodajanje ocen in komentarjev k filmom.
+3. **Ocene service (`/ocene`)** - uporablja **sporočilnega posrednika** in SQLite bazo.
+   - Omogoča uporabnikom dodajanje ocen in komentarjev h filmom.
    - Shranjuje in analizira uporabniške ocene.
 
-4. **Uporabniški vmesnik (`/uporabniski-vmesnik`)** - uporablja spletno tehnologijo za prikaz podatkov.
+4. **Uporabniški vmesnik (`/uporabniski-vmesnik`)** - uporablja spletno tehnologijo - React za prikaz podatkov.
    - Spletna aplikacija, kjer uporabniki dostopajo do sistema.
    - Omogoča dodajanje filmov, ocenjevanje in pregled ocen drugih uporabnikov.
 

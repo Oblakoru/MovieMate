@@ -14,3 +14,5 @@ Storitev vsebuje podatke o filmih in omogoča njihovo iskanje.
 ## 📂 gRPC Metode
 - `GetMovieById(id)` – Pridobi podatke o filmu
 - `SearchMovies(query)` – Iskanje filmov po naslovu
+
+## TODO
