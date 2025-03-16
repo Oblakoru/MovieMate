@@ -57,4 +57,4 @@ Sistem sledi mikrostoritveni arhitekturi in vključuje naslednje ključne storit
 - [Uporabniški vmesnik](UporabniskiVmesnik/README.md)
 
 
-![MovieMate](MovieMate.png)
+![MovieMate](docs/MovieMate.png)
