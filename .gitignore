@@ -1,0 +1,45 @@
+# 📦 Node.js dependencies
+node_modules/
+npm-debug.log
+package-lock.json
+yarn.lock
+
+# 🚀 Environment variables (store secrets here)
+.env
+.env.local
+.env.development
+.env.production
+
+# 🏗️ Build output
+dist/
+build/
+
+# 🗂️ Logs & temp files
+logs/
+*.log
+logs/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+.DS_Store
+
+# ⚡ SQLite Database & migrations
+users.db
+*.sqlite
+*.sqlite3
+migrations/
+
+# 🐳 Docker-related files
+docker-compose.override.yml
+*.dockerignore
+
+# 🧪 Test coverage reports
+coverage/
+.nyc_output/
+
+# 💡 Editor & OS specific files
+.vscode/
+.idea/
+*.swp
+*.swo
