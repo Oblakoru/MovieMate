@@ -1,0 +1,6 @@
+# 🐍 Python virtualno okolje
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
