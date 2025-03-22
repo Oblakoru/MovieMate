@@ -1,23 +1,36 @@
-name: Python Tests
+name: FilmiService CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
-  test:
+  test-filmiservice:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: 🚀 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: '3.10'
 
-      - name: Install dependencies
-        run: pip install grpcio grpcio-tools sqlite3
+      - name: 📦 Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install grpcio grpcio-tools sqlite3
 
-      - name: Run tests
+      - name: 🧪 Run tests
         working-directory: FilmiService
-        run: python -m unittest discover
+        run: |
+          source ../venv/bin/activate
+          python -m unittest discover -s tests
