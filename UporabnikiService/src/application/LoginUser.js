@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 
 class LoginUser {
+    
     constructor(userRepository) {
         this.userRepository = userRepository;
     }

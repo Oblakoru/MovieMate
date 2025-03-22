@@ -2,7 +2,7 @@ const sqlite3 = require("sqlite3").verbose();
 
 class UserRepository {
     
-    constructor(dbPath = "users.db") {
+    constructor(dbPath = process.env.NODE_ENV === "test" ? "test.db" : "users.db") {
         this.db = new sqlite3.Database(dbPath, (err) => {
             if (err) {
                 console.error("Napaka pri povezavi z bazo:", err.message);
