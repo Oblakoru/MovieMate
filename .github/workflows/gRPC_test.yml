@@ -27,7 +27,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          pip install grpcio grpcio-tools sqlite3
+          pip install grpcio grpcio-tools
 
       - name: 🧪 Run tests
         working-directory: FilmiService
