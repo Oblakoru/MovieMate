@@ -24,12 +24,6 @@ yarn-error.log*
 debug.log
 .DS_Store
 
-# ⚡ SQLite Database & migrations
-users.db
-*.sqlite
-*.sqlite3
-migrations/
-
 # 🐳 Docker-related files
 docker-compose.override.yml
 *.dockerignore
