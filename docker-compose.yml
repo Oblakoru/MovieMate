@@ -13,3 +13,16 @@ services:
       - ./UporabnikiService/test.db:/app/test.db
       - ./UporabnikiService/users.db:/app/users.db
     restart: unless-stopped
+
+  filmi-service:
+    build:
+      context: ./FilmiService  
+    container_name: filmi_service
+    ports:
+      - "50051:50051"  
+    volumes:
+      - ./FilmiService/movies.db:/app/movies.db  
+    restart: unless-stopped
+
+
+  
