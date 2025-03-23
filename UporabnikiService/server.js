@@ -2,10 +2,12 @@ const express = require("express");
 const usersRouter = require("./routes/users");
 const morgan = require("morgan");
 const UserRepository = require("./src/infrastructure/UserRepository");
+const setupSwagger = require("./swagger");
 
 const app = express();
 app.use(express.json());
 
+setupSwagger(app);
 
 app.use(morgan('dev')); 
 
