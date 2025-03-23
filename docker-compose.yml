@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  uporabniki-service:
+    build:
+      context: ./UporabnikiService  
+    container_name: uporabniki_service
+    ports:
+      - "3000:3000"  
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Only mount database files
+      - ./UporabnikiService/test.db:/app/test.db
+      - ./UporabnikiService/users.db:/app/users.db
+    restart: unless-stopped
