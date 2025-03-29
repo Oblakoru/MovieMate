@@ -9,7 +9,6 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      # Only mount database files
       - ./UporabnikiService/test.db:/app/test.db
       - ./UporabnikiService/users.db:/app/users.db
     restart: unless-stopped
