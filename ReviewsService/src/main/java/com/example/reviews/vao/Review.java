@@ -1,14 +1,24 @@
 package com.example.reviews.vao;
-import io.quarkus.hibernate.reactive.panache.PanacheEntity;
-import jakarta.persistence.Entity;
+
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 
 @Entity
+@Cacheable
 public class Review extends PanacheEntity {
-    @Column(name = "username")  // Rename the column to avoid the reserved keyword
-    public String user;
-    public String movie;
-    public String content;
+
+    @Column(length = 255)
+    public String comment;
+
+    @Column(nullable = false)
     public int rating;
+
+    @Column(nullable = false)
+    public Long movieId;
+
+    @Column(nullable = false)
+    public Long userId;
 }
 
