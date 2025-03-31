@@ -1,5 +1,6 @@
 package com.example.reviews.rest;
 
+import io.quarkus.hibernate.reactive.panache.Panache;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -21,9 +22,8 @@ public class ReviewResource {
 
     @POST
     public Uni<Response> addReview(Review review) {
-        review.id = null; // Ensure the ID is null for new reviews
-        return reviewRepository.persist(review)
-                .onItem().invoke(() -> System.out.println("Review added: " + review.comment))
+        review.id = null; // Ensure ID is generated
+        return Panache.withTransaction(() -> review.persist())
                 .replaceWith(Response.status(Response.Status.CREATED).build());
     }
 
