@@ -20,5 +20,6 @@ public class Review extends PanacheEntity {
 
     @Column(nullable = false)
     public Long userId;
+
 }
 

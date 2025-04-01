@@ -24,4 +24,16 @@ services:
     restart: unless-stopped
 
 
+  reviews-service:
+    build:
+      context: ./ReviewsService
+      dockerfile: src/main/Docker/Dockerfile.jvm 
+    container_name: reviews_service
+    ports:
+      - "8080:8080" 
+    restart: unless-stopped
+
+
+  
+
   
