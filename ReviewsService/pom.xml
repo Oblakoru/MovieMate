@@ -74,6 +74,19 @@
         </dependency>
 
 
+        <!--Za ActiveMQ-->
+        <!-- https://mvnrepository.com/artifact/io.quarkiverse.artemis/quarkus-artemis-jms -->
+        <dependency>
+            <groupId>io.quarkiverse.artemis</groupId>
+            <artifactId>quarkus-artemis-jms</artifactId>
+            <version>3.7.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
