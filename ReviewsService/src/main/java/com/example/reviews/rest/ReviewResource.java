@@ -22,18 +22,14 @@ public class ReviewResource {
 
     @POST
     public Uni<Response> addReview(Review review) {
-        review.id = null; // Ensure ID is generated
+        review.id = null;
         return Panache.withTransaction(() -> review.persist())
                 .replaceWith(Response.status(Response.Status.CREATED).build());
     }
 
     @GET
     public Uni<List<Review>> getAllReviews() {
-        return reviewRepository.listAllReviews()
-                .onItem().invoke(reviews -> {
-                    System.out.println("Retrieved " + reviews.size() + " reviews from the database");
-                    reviews.forEach(review -> System.out.println("Review: " + review.id + ", Movie ID: " + review.movieId));
-                });
+        return reviewRepository.listAllReviews();
     }
 
     @GET
@@ -41,4 +37,37 @@ public class ReviewResource {
     public Uni<List<Review>> getReviewsByMovie(@PathParam("movieId") Long movieId) {
         return reviewRepository.findByMovieId(movieId);
     }
+
+    @PUT
+    @Path("/{id}")
+    public Uni<Response> updateReview(@PathParam("id") Long id, Review updatedReview) {
+        return Panache.withTransaction(() ->
+                        reviewRepository.findById(id)
+                                .onItem().ifNotNull().invoke(existingReview -> {
+                                    existingReview.comment = updatedReview.comment;
+                                    existingReview.rating = updatedReview.rating;
+                                    existingReview.movieId = updatedReview.movieId;
+                                    existingReview.userId = updatedReview.userId;
+                                })
+                ).onItem().ifNotNull().transform(ignore -> Response.ok().build())
+                .onItem().ifNull().continueWith(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Uni<Response> deleteReview(@PathParam("id") Long id) {
+        return Panache.withTransaction(() ->
+                reviewRepository.deleteById(id)
+        ).map(deleted -> deleted ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    @GET
+    @Path("/{id}")
+    public Uni<Response> getReviewById(@PathParam("id") Long id) {
+        return reviewRepository.findById(id)
+                .onItem().ifNotNull().transform(review -> Response.ok(review).build())
+                .onItem().ifNull().continueWith(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
 }
+
