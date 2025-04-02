@@ -40,6 +40,24 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  postgresql:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=MovieMate
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data 
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "MovieMate"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
   reviews-service:
     build:
       context: ./ReviewsService
@@ -51,10 +69,13 @@ services:
       - ARTEMIS_URL=tcp://host.docker.internal:61616
       - DB_URL=postgresql://host.docker.internal:5432/MovieMate
     depends_on:
+      postgresql:
+        condition: service_healthy
       activemq-artemis:
         condition: service_healthy
     restart: unless-stopped
 
-  
+volumes:
+  postgres-data: 
 
   
