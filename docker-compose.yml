@@ -24,6 +24,22 @@ services:
     restart: unless-stopped
 
 
+  activemq-artemis:
+    image: apache/activemq-artemis
+    container_name: activemq_artemis
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    environment:
+      - ARTEMIS_USERNAME=artemis
+      - ARTEMIS_PASSWORD=simetraehcapa
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8161"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
   reviews-service:
     build:
       context: ./ReviewsService
@@ -31,8 +47,13 @@ services:
     container_name: reviews_service
     ports:
       - "8080:8080" 
+    environment:
+      - ARTEMIS_URL=tcp://host.docker.internal:61616
+      - DB_URL=postgresql://host.docker.internal:5432/MovieMate
+    depends_on:
+      activemq-artemis:
+        condition: service_healthy
     restart: unless-stopped
-
 
   
 
