@@ -22,6 +22,8 @@ jobs:
       
       - name: Docker info
         run: docker info
+        working-directory: ./ReviewsService
         
       - name: Build and Test with Maven
         run: mvn -B verify
+        working-directory: ./ReviewsService
