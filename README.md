@@ -2,6 +2,8 @@
 
 ## 📌 Opis projekta
 
+Naloga je nastala v sklopu predmeta IT Arhitekture
+
 MovieMate je sistem za sledenje in ocenjevanje ogledanih filmov. Omogoča uporabnikom, da vodijo evidenco filmov, ki so jih že pogledali, ocenjujejo filme in prebirajo ocene drugih uporabnikov.
 
 ## 🎯 Poslovni problem
