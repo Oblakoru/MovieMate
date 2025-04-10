@@ -6,6 +6,7 @@ const cors = require("@koa/cors");
 // Uvozimo posamezne route module
 const userRoutes = require("./routes/users");
 const reviewRoutes = require("./routes/reviews");
+const movieRoutes = require("./routes/movies"); 
 
 const app = new Koa();
 const router = new Router();
@@ -22,6 +23,7 @@ router.get("/", (ctx) => {
 
 app.use(userRoutes.routes()).use(userRoutes.allowedMethods());
 app.use(reviewRoutes.routes()).use(reviewRoutes.allowedMethods());
+app.use(movieRoutes.routes()).use(movieRoutes.allowedMethods())
 app.use(router.routes()).use(router.allowedMethods());
 
 // Zagon serverja

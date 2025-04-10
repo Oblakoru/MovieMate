@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package movies;
+
+service MovieService {
+  rpc CreateMovie (MovieCreateRequest) returns (MovieResponse);
+  rpc GetMovieById (MovieRequest) returns (MovieResponse);
+  rpc UpdateMovie (MovieUpdateRequest) returns (MovieResponse);
+  rpc DeleteMovie (MovieRequest) returns (DeleteResponse);
+  rpc SearchMovies (SearchRequest) returns (MovieList);
+}
+
+message MovieRequest {
+  int32 id = 1;
+}
+
+message MovieCreateRequest {
+  string title = 1;
+  int32 year = 2;
+  string genre = 3;
+  string description = 4;
+  repeated string actors = 5;
+}
+
+message MovieUpdateRequest {
+  int32 id = 1;
+  string title = 2;
+  int32 year = 3;
+  string genre = 4;
+  string description = 5;
+  repeated string actors = 6;
+}
+
+message SearchRequest {
+  string query = 1;
+}
+
+message MovieResponse {
+  int32 id = 1;
+  string title = 2;
+  int32 year = 3;
+  string genre = 4;
+  string description = 5;
+  repeated string actors = 6;
+}
+
+message MovieList {
+  repeated MovieResponse movies = 1;
+}
+
+message DeleteResponse {
+  string message = 1;
+}
