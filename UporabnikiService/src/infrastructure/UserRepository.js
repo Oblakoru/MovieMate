@@ -19,6 +19,7 @@ class UserRepository {
                 name TEXT,
                 email TEXT UNIQUE,
                 passwordHash TEXT,
+                role TEXT DEFAULT 'user',
                 createdAt TEXT
             )
         `);
@@ -26,13 +27,15 @@ class UserRepository {
 
     async create(user) {
         return new Promise((resolve, reject) => {
-            const { name, email, passwordHash } = user;
+            const { name, email, passwordHash, role = 'user' } = user;
+            const createdAt = new Date().toISOString();
+
             this.db.run(
-                `INSERT INTO users (name, email, passwordHash, createdAt) VALUES (?, ?, ?, ?)`,
-                [name, email, passwordHash, new Date().toISOString()],
+                `INSERT INTO users (name, email, passwordHash, role, createdAt) VALUES (?, ?, ?, ?, ?)`,
+                [name, email, passwordHash, role, createdAt],
                 function (err) {
                     if (err) return reject(err);
-                    resolve({ id: this.lastID, ...user });
+                    resolve({ id: this.lastID, name, email, role, createdAt });
                 }
             );
         });
@@ -67,10 +70,11 @@ class UserRepository {
 
     async update(id, user) {
         return new Promise((resolve, reject) => {
-            const { name, email, passwordHash } = user;
+            const { name, email, passwordHash, role } = user;
+
             this.db.run(
-                `UPDATE users SET name = ?, email = ?, passwordHash = ? WHERE id = ?`,
-                [name, email, passwordHash, id],
+                `UPDATE users SET name = ?, email = ?, passwordHash = ?, role = ? WHERE id = ?`,
+                [name, email, passwordHash, role, id],
                 function (err) {
                     if (err) return reject(err);
                     resolve({ id, ...user });
