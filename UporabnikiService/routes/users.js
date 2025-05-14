@@ -7,10 +7,6 @@ module.exports = (userRepository) => {
   const UpdateUser = require("../src/application/UpdateUser");
   const DeleteUser = require("../src/application/DeleteUser");
 
-  const authenticateToken = require("../middleware/authenticateToken");
-  const authorizeAdmin = require("../middleware/authorizeAdmin");
-  const authorizeAdminOrOwner = require("../middleware/authorizeAdminOrOwner");
-
   const router = express.Router();
   const registerUser = new RegisterUser(userRepository);
   const loginUser = new LoginUser(userRepository);
@@ -151,7 +147,7 @@ module.exports = (userRepository) => {
    *         description: User not found
    */
 
-  router.get("/:id", authenticateToken, authorizeAdminOrOwner, async (req, res) => {
+  router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
       const user = await getUser.execute(id);
@@ -193,7 +189,7 @@ module.exports = (userRepository) => {
    *       400:
    *         description: Update error
    */
-  router.put("/:id", authenticateToken, authorizeAdminOrOwner, async (req, res) => {
+  router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
     try {
@@ -223,7 +219,7 @@ module.exports = (userRepository) => {
    *       400:
    *         description: Deletion error
    */
-   router.delete("/:id", authenticateToken, authorizeAdminOrOwner, async (req, res) => {
+   router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     try {
       await deleteUser.execute(id);

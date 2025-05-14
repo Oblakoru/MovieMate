@@ -1,4 +1,4 @@
-function authorizeAdminOrOwner(req, res, next) {
+/* function authorizeAdminOrOwner(req, res, next) {
     const { user } = req;
     const { id } = req.params;
 
@@ -14,3 +14,4 @@ function authorizeAdminOrOwner(req, res, next) {
 }
 
 module.exports = authorizeAdminOrOwner;
+ */

@@ -1,4 +1,4 @@
-import grpc
+""" import grpc
 from grpc import ServerInterceptor
 import jwt
 from dotenv import load_dotenv
@@ -41,4 +41,4 @@ class AuthInterceptor(ServerInterceptor):
                 context.abort(grpc.StatusCode.UNAUTHENTICATED, "Invalid token")
             return grpc.unary_unary_rpc_method_handler(invalid_request)
 
-        return continuation(handler_call_details)
+        return continuation(handler_call_details) """
