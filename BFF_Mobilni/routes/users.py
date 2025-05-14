@@ -1,6 +1,7 @@
 # users.py (Flask Blueprint)
 import requests
 from flask import Blueprint, jsonify, request
+from app import jwt_middleware, role_middleware
 
 USER_SERVICE_URL = "http://localhost:3000/users"
 
@@ -47,6 +48,8 @@ def login_user_route():
 
 # Get All Users
 @user_routes.route('/', methods=['GET'])
+@jwt_middleware
+@role_middleware
 def get_users():
     try:
         response = requests.get(f"{USER_SERVICE_URL}")
@@ -60,6 +63,8 @@ def get_users():
 
 # Get User by ID
 @user_routes.route('/<int:id>', methods=['GET'])
+@jwt_middleware
+@role_middleware
 def get_user(id):
     try:
         response = requests.get(f"{USER_SERVICE_URL}/{id}")
@@ -73,6 +78,8 @@ def get_user(id):
 
 # Update User by ID
 @user_routes.route('/<int:id>', methods=['PUT'])
+@jwt_middleware
+@role_middleware
 def update_user_route(id):
     data = request.get_json()
     name = data.get("name")
@@ -91,6 +98,8 @@ def update_user_route(id):
 
 # Delete User by ID
 @user_routes.route('/<int:id>', methods=['DELETE'])
+@jwt_middleware
+@role_middleware
 def delete_user_route(id):
     try:
         response = requests.delete(f"{USER_SERVICE_URL}/{id}")

@@ -1,6 +1,7 @@
 # reviews.py (Flask Blueprint)
 import requests
 from flask import Blueprint, jsonify, request
+from app import jwt_middleware, role_middleware, review_ownership_middleware
 
 REVIEW_SERVICE_URL = "http://localhost:8080/reviews"
 
@@ -9,6 +10,7 @@ review_routes = Blueprint('review_routes', __name__)
 
 # Add a new review
 @review_routes.route('/', methods=['POST'])
+@jwt_middleware
 def add_review():
     data = request.get_json()
     try:
@@ -46,6 +48,8 @@ def get_reviews_by_movie(movie_id):
 
 # Update a review by ID
 @review_routes.route('/<int:id>', methods=['PUT'])
+@jwt_middleware
+@review_ownership_middleware
 def update_review(id):
     data = request.get_json()
     try:
@@ -59,6 +63,8 @@ def update_review(id):
 
 # Delete a review by ID
 @review_routes.route('/<int:id>', methods=['DELETE'])
+@jwt_middleware
+@review_ownership_middleware
 def delete_review(id):
     try:
         response = requests.delete(f"{REVIEW_SERVICE_URL}/{id}")
