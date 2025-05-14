@@ -7,15 +7,16 @@ from infrastructure.db.connection import get_db_connection, initialize_db
 from infrastructure.repositories.sqlite_repository import SQLiteMovieRepository
 from interfaces.grpc.service_adapter import MovieServiceAdapter
 
+from auth_interceptor import AuthInterceptor
 import movies_pb2_grpc
 
 # ✅ Setup logging
 logging.basicConfig(
-    level=logging.INFO,  # Change to DEBUG for more details
+    level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("grpc_server.log"),  # Save logs to a file
-        logging.StreamHandler()  # Print logs to console
+        logging.FileHandler("grpc_server.log"),
+        logging.StreamHandler()
     ]
 )
 
@@ -32,7 +33,12 @@ def serve():
         service = MovieService(repository)
         service_adapter = MovieServiceAdapter(service)
 
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+        auth_interceptor = AuthInterceptor()
+
+        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),
+                             interceptors=(auth_interceptor,)
+                             )
+
         movies_pb2_grpc.add_MovieServiceServicer_to_server(service_adapter, server)
         server.add_insecure_port("[::]:50051")
 

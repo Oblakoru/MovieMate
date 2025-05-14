@@ -1,7 +1,6 @@
 from domain.models import Movie
 from application.interfaces.repositories import MovieRepository
 
-
 class SQLiteMovieRepository(MovieRepository):
     def __init__(self, connection):
         self.conn = connection
