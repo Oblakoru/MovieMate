@@ -1,7 +1,7 @@
 # reviews.py (Flask Blueprint)
 import requests
 from flask import Blueprint, jsonify, request
-from app import jwt_middleware, role_middleware, review_ownership_middleware
+from middleware import jwt_middleware, role_middleware, review_ownership_middleware
 
 REVIEW_SERVICE_URL = "http://localhost:8080/reviews"
 

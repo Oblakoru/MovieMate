@@ -7,7 +7,6 @@ from infrastructure.db.connection import get_db_connection, initialize_db
 from infrastructure.repositories.sqlite_repository import SQLiteMovieRepository
 from interfaces.grpc.service_adapter import MovieServiceAdapter
 
-#from auth_interceptor import AuthInterceptor
 import movies_pb2_grpc
 
 # ✅ Setup logging

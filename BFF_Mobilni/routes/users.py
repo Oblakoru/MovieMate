@@ -1,11 +1,10 @@
 # users.py (Flask Blueprint)
 import requests
 from flask import Blueprint, jsonify, request
-from app import jwt_middleware, role_middleware
+from middleware import jwt_middleware, role_middleware
 
 USER_SERVICE_URL = "http://localhost:3000/users"
 
-# Create a Blueprint for users
 user_routes = Blueprint('user_routes', __name__)
 
 # Register User
