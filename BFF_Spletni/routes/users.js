@@ -16,6 +16,7 @@ userRouter.post("/register", async (ctx) => {
     ctx.status = response.status;
     ctx.body = response.data;
   } catch (error) {
+    console.error('Error in Koa service:', error);
     ctx.status = error.response?.status || 500;
     ctx.body = error.response?.data || { error: "Napaka pri registraciji." };
   }

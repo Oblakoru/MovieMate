@@ -1,15 +1,14 @@
-
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
-const cors = require('cors'); // Import the cors middleware
+const cors = require('cors');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
     console.error('FATAL ERROR: JWT_SECRET environment variable not set!');
-    process.exit(1); // Exit the process if the secret is missing
+    process.exit(1);
 }
 
 function authenticateToken(req, res, next) {
@@ -34,89 +33,114 @@ function authenticateToken(req, res, next) {
 const app = express();
 const port = 3003;
 
-const KOA_SERVICE_URL = 'http://localhost:3001';
-const FLASK_SERVICE_URL = 'http://localhost:3002';
-
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 15 * 60 * 1000, 
     max: 100,
     message: "Too many requests from this IP, please try again later"
 });
 
-// Enable CORS for all origins (adjust as needed for production)
 app.use(cors());
 app.use(limiter);
 app.use(express.json());
 
-function resolveService(req) {
-    const clientType = req.headers['x-client-type'];
-    if (clientType === 'mobile') return FLASK_SERVICE_URL;
-    if (clientType === 'web') return KOA_SERVICE_URL;
-    console.warn(`Warning: Missing or invalid X-Client-Type header: ${clientType}`);
-    return null; // Explicitly return null for clarity
+const KOA_SERVICE_URL = 'http://localhost:3001';
+const FLASK_SERVICE_URL = 'http://localhost:3002';
+
+
+function getServiceUrl(clientType) {
+    if (clientType === 'mobile') {
+        return FLASK_SERVICE_URL;
+    } else if (clientType === 'web') {
+        return KOA_SERVICE_URL;
+    } else {
+        return null;
+    }
 }
 
-async function proxyRequest(req, res, targetUrl) {
-  try {
-    console.log(`Proxying request to: ${targetUrl}`);  
-    const response = await axios({
-      method: req.method,
-      url: targetUrl,
-      data: req.body,
-      headers: { ...req.headers },
-      params: req.query,
-      timeout: 10000  
-    });
-    console.log('Response from service:', response.data);  // Log the response from the backend
-    return res.status(response.status).json(response.data);
-  } catch (error) {
-    console.error('Error during proxy request:', error);  // Log error if something goes wrong
-    const status = error.response?.status || 500;
-    const message = error.response?.data || { error: 'Internal error' };
-    console.error('Error response:', message);  // Log the response error
-    return res.status(status).json(message);
-  }
-}
-
-// Unprotected routes for login and register
 app.post('/users/login', async (req, res) => {
-    const baseUrl = resolveService(req);
+    const clientType = req.headers['x-client-type'];
+    const baseUrl = getServiceUrl(clientType);
+    
     if (!baseUrl) {
         return res.status(400).json({ error: 'Missing or invalid X-Client-Type header' });
     }
-    return proxyRequest(req, res, `${baseUrl}/users/login`);
+
+    try {
+        const response = await axios.post(`${baseUrl}/users/login`, req.body);
+        return res.json(response.data);
+    } catch (error) {
+        console.error('Error during login call:', error);
+        return res.status(error.response?.status || 500).json({ error: 'Error during login call' });
+    }
 });
 
 app.post('/users/register', async (req, res) => {
-    const baseUrl = resolveService(req);
+    const clientType = req.headers['x-client-type'];
+    const baseUrl = getServiceUrl(clientType);
+    
     if (!baseUrl) {
         return res.status(400).json({ error: 'Missing or invalid X-Client-Type header' });
     }
-    return proxyRequest(req, res, `${baseUrl}/users/register`);
+
+    try {
+        const response = await axios.post(`${baseUrl}/users/register`, req.body);
+        return res.json(response.data);
+    } catch (error) {
+        console.error('Error during registration call:', error);
+        return res.status(error.response?.status || 500).json({ error: 'Error during registration call' });
+    }
+});
+
+// Test registration endpoint (direct call without proxy)
+app.post('/users/test-register', async (req, res) => {
+    try {
+        const response = await axios.post('http://localhost:3001/users/register', req.body);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error calling Koa directly:', error);
+        res.status(error.response?.status || 500).json({ error: 'Error during test call' });
+    }
 });
 
 // Apply JWT authentication middleware to all other routes
 app.use(authenticateToken); // This will protect all routes below
 
 app.get('/movies/:id', async (req, res) => {
-    const baseUrl = resolveService(req);
+    const clientType = req.headers['x-client-type'];
+    const baseUrl = getServiceUrl(clientType);
+    
     if (!baseUrl) {
         return res.status(400).json({ error: 'Missing or invalid X-Client-Type header' });
     }
-    return proxyRequest(req, res, `${baseUrl}/movies/${req.params.id}`);
+
+    try {
+        const response = await axios.get(`${baseUrl}/movies/${req.params.id}`);
+        return res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching movie:', error);
+        return res.status(error.response?.status || 500).json({ error: 'Failed to fetch movie' });
+    }
 });
 
 app.get('/reviews/:movieId', async (req, res) => {
-    const baseUrl = resolveService(req);
+    const clientType = req.headers['x-client-type'];
+    const baseUrl = getServiceUrl(clientType);
+    
     if (!baseUrl) {
         return res.status(400).json({ error: 'Missing or invalid X-Client-Type header' });
     }
-    return proxyRequest(req, res, `${baseUrl}/reviews/movie/${req.params.movieId}`);
+
+    try {
+        const response = await axios.get(`${baseUrl}/reviews/movie/${req.params.movieId}`);
+        return res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        return res.status(error.response?.status || 500).json({ error: 'Failed to fetch reviews' });
+    }
 });
 
 app.get('/movies/:id/details', async (req, res) => {
     try {
-        console.log(`Fetching details for movie ID: ${req.params.id}`);
         const flaskPromise = axios.get(`${FLASK_SERVICE_URL}/movies/${req.params.id}`);
         const koaPromise = axios.get(`${KOA_SERVICE_URL}/reviews/movie/${req.params.id}`);
         const [movieRes, reviewsRes] = await Promise.all([flaskPromise, koaPromise]);
@@ -125,13 +149,9 @@ app.get('/movies/:id/details', async (req, res) => {
             ...movieRes.data,
             reviews: reviewsRes.data
         };
-        console.log('Successfully fetched and combined movie details.');
         return res.json(combinedData);
     } catch (error) {
         console.error('Error fetching movie details:', error.message);
-        if (error.response) {
-            console.error('Flask/Koa response error:', error.response.status, error.response.data);
-        }
         return res.status(500).json({ error: 'Failed to fetch movie details from backend services.' });
     }
 });
