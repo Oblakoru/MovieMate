@@ -22,7 +22,6 @@ userRouter.post("/register", async (ctx) => {
   }
 });
 
-
 userRouter.post("/login", async (ctx) => {
   const loginData = ctx.request.body;
   try {
@@ -34,7 +33,6 @@ userRouter.post("/login", async (ctx) => {
     ctx.body = error.response?.data || { error: "Napaka pri prijavi." };
   }
 });
-
 
 userRouter.get("/", jwtMiddleware, roleMiddleware, async (ctx) => {
   const response = await axios.get(`${USER_SERVICE_URL}`);

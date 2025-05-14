@@ -25,7 +25,7 @@ function authenticateToken(req, res, next) {
             console.log('Authentication failed: Invalid or expired token', err);
             return res.status(403).json({ error: 'Invalid or expired token' });
         }
-        req.user = user; // Attach the user to the request
+        req.user = user; 
         next();
     });
 }
@@ -91,19 +91,8 @@ app.post('/users/register', async (req, res) => {
     }
 });
 
-// Test registration endpoint (direct call without proxy)
-app.post('/users/test-register', async (req, res) => {
-    try {
-        const response = await axios.post('http://localhost:3001/users/register', req.body);
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error calling Koa directly:', error);
-        res.status(error.response?.status || 500).json({ error: 'Error during test call' });
-    }
-});
 
-// Apply JWT authentication middleware to all other routes
-app.use(authenticateToken); // This will protect all routes below
+app.use(authenticateToken); 
 
 app.get('/movies/:id', async (req, res) => {
     const clientType = req.headers['x-client-type'];
@@ -136,23 +125,6 @@ app.get('/reviews/:movieId', async (req, res) => {
     } catch (error) {
         console.error('Error fetching reviews:', error);
         return res.status(error.response?.status || 500).json({ error: 'Failed to fetch reviews' });
-    }
-});
-
-app.get('/movies/:id/details', async (req, res) => {
-    try {
-        const flaskPromise = axios.get(`${FLASK_SERVICE_URL}/movies/${req.params.id}`);
-        const koaPromise = axios.get(`${KOA_SERVICE_URL}/reviews/movie/${req.params.id}`);
-        const [movieRes, reviewsRes] = await Promise.all([flaskPromise, koaPromise]);
-
-        const combinedData = {
-            ...movieRes.data,
-            reviews: reviewsRes.data
-        };
-        return res.json(combinedData);
-    } catch (error) {
-        console.error('Error fetching movie details:', error.message);
-        return res.status(500).json({ error: 'Failed to fetch movie details from backend services.' });
     }
 });
 
