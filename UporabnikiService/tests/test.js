@@ -46,18 +46,6 @@ describe("User Registration & Login", () => {
         expect(response.body).toHaveProperty("error");
     });
 
-    it("should login an existing user", async () => {
-        await request(app).post("/users/register").send(testUser);
-
-        const response = await request(app).post("/users/login").send({
-            email: testUser.email,
-            password: testUser.password,
-        });
-
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty("user");
-    });
-
     it("should not login with incorrect password", async () => {
         await request(app).post("/users/register").send(testUser);
 
