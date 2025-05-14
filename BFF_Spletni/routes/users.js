@@ -1,5 +1,7 @@
 const Router = require("koa-router");
 const axios = require("axios");
+const jwtMiddleware = require("../authMiddleware");
+const roleMiddleware = require("../roleMiddleware");
 
 const userRouter = new Router({
   prefix: "/users",
@@ -7,7 +9,6 @@ const userRouter = new Router({
 
 const USER_SERVICE_URL = "http://localhost:3000/users";
 
-// POST /users/register
 userRouter.post("/register", async (ctx) => {
   const userData = ctx.request.body;
   try {
@@ -20,7 +21,7 @@ userRouter.post("/register", async (ctx) => {
   }
 });
 
-// POST /users/login
+
 userRouter.post("/login", async (ctx) => {
   const loginData = ctx.request.body;
   try {
@@ -33,29 +34,29 @@ userRouter.post("/login", async (ctx) => {
   }
 });
 
-// GET /users
-userRouter.get("/", async (ctx) => {
+
+userRouter.get("/", jwtMiddleware, roleMiddleware, async (ctx) => {
   const response = await axios.get(`${USER_SERVICE_URL}`);
   ctx.body = response.data;
 });
 
-// GET /users/:id
-userRouter.get("/:id", async (ctx) => {
+
+userRouter.get("/:id", jwtMiddleware, roleMiddleware, async (ctx) => {
   const { id } = ctx.params;
   const response = await axios.get(`${USER_SERVICE_URL}/${id}`);
   ctx.body = response.data;
 });
 
-// PUT /users/:id
-userRouter.put("/:id", async (ctx) => {
+
+userRouter.put("/:id", jwtMiddleware, roleMiddleware, async (ctx) => {
   const { id } = ctx.params;
   const updatedUser = ctx.request.body;
   const response = await axios.put(`${USER_SERVICE_URL}/${id}`, updatedUser);
   ctx.body = response.data;
 });
 
-// DELETE /users/:id
-userRouter.delete("/:id", async (ctx) => {
+
+userRouter.delete("/:id", jwtMiddleware, roleMiddleware, async (ctx) => {
   const { id } = ctx.params;
   const response = await axios.delete(`${USER_SERVICE_URL}/${id}`);
   ctx.status = response.status;

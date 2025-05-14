@@ -1,12 +1,15 @@
 const Router = require("koa-router");
 const client = require("../client");
+const jwtMiddleware = require("../authMiddleware");
+const roleMiddleware = require("../roleMiddleware");
+
 
 const router = new Router({
   prefix: "/movies",
 });
 
 // Create movie
-router.post("/", async (ctx) => {
+router.post("/", jwtMiddleware, async (ctx) => {
   const data = ctx.request.body;
   await new Promise((resolve, reject) => {
     client.CreateMovie(data, (err, res) => {
@@ -60,7 +63,7 @@ router.get("/", async (ctx) => {
 });
 
 // Update movie
-router.put("/:id", async (ctx) => {
+router.put("/:id", jwtMiddleware, roleMiddleware, async (ctx) => {
   const id = parseInt(ctx.params.id, 10);
   const data = { ...ctx.request.body, id };
 
@@ -78,7 +81,7 @@ router.put("/:id", async (ctx) => {
 });
 
 // Delete movie
-router.delete("/:id", async (ctx) => {
+router.delete("/:id", jwtMiddleware, roleMiddleware, async (ctx) => {
   const id = parseInt(ctx.params.id, 10);
   await new Promise((resolve, reject) => {
     client.DeleteMovie({ id }, (err, res) => {
