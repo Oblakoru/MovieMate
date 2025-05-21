@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const jwtMiddleware = async (ctx, next) => {
   const authHeader = ctx.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Extract the token after 'Bearer'
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     ctx.status = 401;
@@ -11,9 +11,8 @@ const jwtMiddleware = async (ctx, next) => {
   }
 
   try {
-    // Verify the token using the secret
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    ctx.state.user = decoded; // Add the decoded user to ctx.state
+    ctx.state.user = decoded; 
     await next();
   } catch (err) {
     ctx.status = 403;
