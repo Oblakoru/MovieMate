@@ -22,13 +22,14 @@ public class ReviewResource {
     ReviewRepository reviewRepository;
 
     @Inject
-    ReviewProducer reviewProducer; // Inject the producer
+    ReviewProducer reviewProducer;
 
     @POST
     public Uni<Response> addReview(Review review) {
         review.id = null;
         return Panache.withTransaction(() -> review.persist())
-                .invoke(() -> reviewProducer.sendReviewEvent("CREATED", review)) // Send message
+                .onItem().invoke(() -> reviewProducer.sendReviewEvent("CREATED", review))
+                .onFailure().invoke(e -> System.err.println("JMS error (CREATE): " + e.getMessage()))
                 .replaceWith(Response.status(Response.Status.CREATED).build());
     }
 
@@ -55,7 +56,8 @@ public class ReviewResource {
                                     existingReview.userId = updatedReview.userId;
                                 })
                 )
-                .invoke(() -> reviewProducer.sendReviewEvent("UPDATED", updatedReview)) // Send message
+                .onItem().invoke(() -> reviewProducer.sendReviewEvent("UPDATED", updatedReview))
+                .onFailure().invoke(e -> System.err.println("JMS error (UPDATE): " + e.getMessage()))
                 .onItem().ifNotNull().transform(ignore -> Response.ok().build())
                 .onItem().ifNull().continueWith(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -68,7 +70,11 @@ public class ReviewResource {
                                 .onItem().ifNotNull().call(review -> review.delete())
                 ).invoke(review -> {
                     if (review != null) {
-                        reviewProducer.sendReviewEvent("DELETED", review); // Use the existing review object
+                        try {
+                            reviewProducer.sendReviewEvent("DELETED", review);
+                        } catch (Exception e) {
+                            System.err.println("JMS error (DELETE): " + e.getMessage());
+                        }
                     }
                 }).onItem().ifNotNull().transform(ignore -> Response.noContent().build())
                 .onItem().ifNull().continueWith(Response.status(Response.Status.NOT_FOUND).build());
